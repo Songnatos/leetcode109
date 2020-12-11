@@ -3,23 +3,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-class Solution {//思路错误 不对
+class Solution {
     public String countAndSay(int n) {
-        Queue<Integer> num=new LinkedList<Integer> ();;
-        while(n!=0){
-            num.offer(n%10);
-            n=n/10;
+        if(n==1){
+            return "1";
         }
+        String str=countAndSay(n-1);
         StringBuilder res=new StringBuilder();
-
-        while(!num.isEmpty()){
-            int count=1;
-            int temp=num.poll();
-            while(num.peek()==temp){
-                num.poll();
-                count++;
+        int length=str.length();
+        int start=0;
+        for(int i=1;i<length+1;i++){
+            if(i==length){
+                res.append(i-start).append(str.charAt(start));
+            }else if(str.charAt(i)!=str.charAt(i-1)){//找到不同的
+                res.append(i-start).append(str.charAt(start));
+                start=i;
             }
-            res.append(count);res.append(temp);
         }
         return res.toString();
     }
