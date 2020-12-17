@@ -13,18 +13,20 @@ class Solution {
         int start=0;
         int maxlength=-1;
         for(int i=0;i<s.length();i++){
-            if(gap[s.charAt(i)-'a']==-1){
+            if(s.charAt(i)<'a'||s.charAt(i)>'z'){
+                return 0;
+            }
+            if(gap[s.charAt(i)-'a']==-1||gap[s.charAt(i)-'a']<start){
                 gap[s.charAt(i)-'a']=i;
-                if(i==(s.length()-1)){
-                    maxlength=Math.max(i-start+1,maxlength);
-                }
-            }else{
+
+            }
+            else{
+                 maxlength=Math.max(i-start,maxlength);
                 start=gap[s.charAt(i)-'a']+1;
-                if(s.charAt(start-1)==s.charAt(i))maxlength=Math.max(i-start,maxlength);
-                else maxlength=Math.max(i-start+1,maxlength);
                 gap[s.charAt(i)-'a']=i;
             }
         }
-        return maxlength==-1?s.length():maxlength;
+        maxlength=Math.max(s.length()-start,maxlength);
+        return maxlength;
     }
 }
