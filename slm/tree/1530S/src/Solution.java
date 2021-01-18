@@ -14,27 +14,47 @@ class Solution {
 
     int max;
     public int countPairs(TreeNode root, int distance) {
-        max=distance;
-        int[] resright=new int[distance];
-        int[] resleft=new int[distance];
-        int res=0;
-        for(int i=0;i<distance;i++){
-            resright[i]=0;resleft[i]=0;
-        }
-        height(root.right,1,resright);
-        height(root.left,1,resleft);
-        for(int i=1;i<distance;i++){
-            res+=resleft[i]+resright[distance-i];
-        }
-        return res;
+      Pair pair=DFS(root,distance);
+      return pair.counts;
     }
-    public  void height(TreeNode root, int height,int[] res){
-        if(height>=max||root==null)return;
-        if(root.left==null&&root.right==null){
-            res[height]++;
-        }else{
-            height(root.left,height+1,res);
-            height(root.right,height+1,res);
+    public Pair DFS(TreeNode root, int distance){
+        int[] height=new int[distance+1];//叶子节点和root距离
+        boolean isLeaf=(root.right==null&&root.left==null);
+        if(isLeaf){
+            height[0]=1;
+            return new Pair(height,0);
+        }
+        int[] rightHeight=new int[distance+1];
+        int[] leftHeight=new int[distance+1];
+        int rightCount=0;int leftCount=0;
+        if(root.left!=null){//获得左子树
+             Pair PairLeft=DFS(root.left,distance);
+            leftHeight=PairLeft.height;
+            leftCount=PairLeft.counts;
+        }
+        if(root.right!=null){//获得右子树
+            Pair right=DFS(root.right,distance);
+            rightHeight=right.height;
+            rightCount=right.counts;
+        }
+        for(int i=0;i<distance;i++){
+            height[i+1]+=leftHeight[i];
+            height[i+1]+=rightHeight[i];
+        }
+        int cn=0;
+        for(int i=0;i<distance+1;i++){
+            for(int j=0;i+j+2<=distance;j++){
+                cn+=leftHeight[i]*rightHeight[j];
+            }
+        }
+        return new Pair(height,cn+leftCount+rightCount);
+    }
+    public class Pair{
+        int[] height;
+        int counts;
+        public Pair(int[] height,int counts){
+            this.height=height;
+            this.counts=counts;
         }
     }
 
