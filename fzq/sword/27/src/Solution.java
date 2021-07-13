@@ -1,33 +1,31 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 class Solution {
-    List<Integer> list = new ArrayList<>();
-
     public TreeNode mirrorTree(TreeNode root) {
         if (root == null)
             return null;
-        dfs(root);
-
-
-        return null;
+        TreeNode left = mirrorTree(root.left);
+        root.left = mirrorTree(root.right);
+        root.right = left;
+        return root;
     }
 
-    private TreeNode build(TreeNode p, int val) {
-        if (p == null) {
-            p = new TreeNode(val);
-            return p;
+    public TreeNode mirrorTree2(TreeNode root) {
+        if (root == null)
+            return null;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node == null)
+                continue;
+            TreeNode left = node.left;
+            node.left = node.right;
+            node.right = left;
+            queue.add(node.left);
+            queue.add(node.right);
         }
-        p.right = build(p.right, val);
-        p.left = build(p.left, val);
-        return p;
-    }
-
-    private void dfs(TreeNode root) {
-        if (root != null) {
-            list.add(root.val);
-            dfs(root.left);
-            dfs(root.right);
-        }
+        return root;
     }
 }
