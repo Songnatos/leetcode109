@@ -18,4 +18,8 @@ public class Dog extends Animal implements Language, Action {
     public void love() {
         System.out.println("摇尾巴");
     }
+
+    public void some() {
+        System.out.println("some");
+    }
 }
